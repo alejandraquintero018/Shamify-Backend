@@ -1,16 +1,41 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag } = require('../../Develop/models');
+const bodyParser = require('body-parser');
+const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all tags
+  try {
+    const tagData = await Category.findAll({
   // be sure to include its associated Product data
+      include: [{ model: Product }],
+      id: req.body.Product.id,
+      product_name: req.body.Product.product_name,
+      price: req.body.Product.price,
+      stock: req.body.Product.stock,
+      category_id: req.body.Product.category_id,
+    });
+    res.status(200).json(tagData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
-  // be sure to include its associated Product data
+  try {
+    const categoryData = await Category.findByPk(req.params.id, {
+       // be sure to include its associated Product data
+      include: [{ model: Product }],
+    });
+    if (!categoryData) {
+      res.status(404).json({ message: 'There are no categories under that id' });
+      return;
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.post('/', (req, res) => {
