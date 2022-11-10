@@ -11,8 +11,7 @@ router.get('/', async (req, res) => {
     const productData = await Product.findAll({
       // be sure to include its associated Category and Tag data
       include: [{ model: Category, Tag }],
-    });
-    res.status(200).json(productData);
+    }).then((productData) => res.status(200).json(productData));
   } catch (err) {
     res.status(500).json(err);
   }
@@ -25,7 +24,7 @@ router.get('/:id', async (req, res) => {
     const productFind = await Product.findByPk(req.params.id, {
       // be sure to include its associated Category and Tag data
       include: [{ model: Category, Tag }],
-    });
+    }).then((productFind) => res.status(200).json(productFind))
     if (!productFind) {
       res.status(404).json({ message: 'There are no products under that id' });
       return;
@@ -63,9 +62,9 @@ router.post('/', async (req, res) => {
     // if no product tags, just respond
     res.status(200).json(product);
   })
-    await((productTagIds) => res.status(200).json(productTagIds))
+    .then((productTagIds) => res.status(200).json(productTagIds))
     .catch((err) => {
-      console.log(err);
+      //console.log(err);
       res.status(400).json(err);
     });
   
@@ -121,7 +120,6 @@ router.put('/:id', (req, res) => {
       res.status(400).json(err);
     });
 });
-
 
 router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value

@@ -47,9 +47,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new tag
-  Tag.create(req.body)
+  try {
+    const createTag = Tag.create(req.body)
     .then((createTag) => res.status(200).json(createTag))
-  if (err) {
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -58,12 +59,10 @@ router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
   Tag.update(req.body, {
     where: {
-      id: req.body.id
-    }
-  }).then((updateTag) => res.status(200).json(updateTag));
-  if (err) {
-    res.status(404).json(err);
-  }
+      id: req.params.id
+    },
+  }).then((updateTag) => res.status(200).json(updateTag))
+  .catch((err) => res.status(404).json(err));
 });
 
 router.delete('/:id', (req, res) => {
@@ -73,10 +72,8 @@ router.delete('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-  .then((deleteTag) => res.status(200).json(deleteTag)); 
-  if(err) {
-    res.status(404).json(err);
-  }
+  .then((deleteTag) => res.status(200).json(deleteTag)) 
+  .catch((err) => res.status(404).json(err));
 });
 
 module.exports = router;
