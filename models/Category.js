@@ -1,3 +1,4 @@
+
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection.js');
 
@@ -17,11 +18,6 @@ Category.init(
     allowNull: false,
   }
 }, 
-// { 
-//   hooks: {
-//     async before
-//   }
-// },
   {
     sequelize,
     timestamps: false,
